@@ -1,5 +1,6 @@
 package com.example.project.filters;
 
+import com.example.project.dao.UserDAO;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.io.IOException;
 @AllArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    private final UserDAO userDAO;
     private JwtService jwtService;
     private UserDetailsService userDetailsService;
 
@@ -38,7 +40,15 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             return;
         }
         jwtToken = authHeader.substring(7);
+
         userEmail = jwtService.extractUsername(jwtToken);
+
+        boolean tokenExists = userDAO.findByToken(jwtToken).isPresent();
+        if (!tokenExists) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: user logged out");
+            return;
+        }
+
         if (userEmail == null && SecurityContextHolder
                 .getContext()
                 .getAuthentication() == null) {
@@ -52,8 +62,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-            filterChain.doFilter(request, response);
-
         }
+        filterChain.doFilter(request, response);
     }
 }

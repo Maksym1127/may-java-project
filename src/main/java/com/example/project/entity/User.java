@@ -1,4 +1,4 @@
-package entity;
+package com.example.project.entity;
 
 
 import jakarta.persistence.*;
@@ -34,6 +34,10 @@ public class User implements UserDetails {
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role = Role.AUTHORIZED;
+
+    @Column(name = "token")
+    private String token;
+
 
     @CreatedDate
     private OffsetDateTime registeredAt;

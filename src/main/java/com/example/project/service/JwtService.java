@@ -1,4 +1,4 @@
-package service;
+package com.example.project.service;
 
 
 import io.jsonwebtoken.Claims;
@@ -19,7 +19,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
 
-    public static final String SECRET_KEY = "VgK40bWyKRsyX1JYW-lnyg1dzs123pmpXlmb9PAC_tg";
+    public static final String SECRET_KEY = "4yGjcwPYBK0ZWMc6P3aGp2bqZoCqJuXiuut7Y9mJKwg";
 
     public String extractUsername(String token) {
 
@@ -55,7 +55,7 @@ public class JwtService {
                 .setClaims(extraClaim)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 20))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 1000))
                 .signWith(getSingingKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

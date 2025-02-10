@@ -1,7 +1,7 @@
-package service;
+package com.example.project.service;
 
-import dao.UserDAO;
-import entity.User;
+import com.example.project.dao.UserDAO;
+import com.example.project.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

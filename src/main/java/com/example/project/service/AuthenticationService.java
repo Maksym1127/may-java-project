@@ -1,9 +1,8 @@
-package service;
+package com.example.project.service;
 
-import dao.UserDAO;
-import entity.*;
+import com.example.project.dao.UserDAO;
+import com.example.project.entity.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,10 +46,33 @@ public class AuthenticationService {
         User user = userDAO.findUserByEmail(authenticationRequest.getEmail())
                 .orElseThrow();
         String token = jwtService.generateToken(user);
+        user.setToken(token);
+        userDAO.save(user);
 
         return AuthenticationResponse
                 .builder()
                 .token(token)
                 .build();
     }
+
+    public AuthenticationResponse logout (String token) {
+        if (token == null || !token.startsWith("Bearer ")) {
+            throw new RuntimeException("Invalid token");
+        }
+
+        String jwt = token.substring(7);
+
+        User user = userDAO.findByToken(jwt)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setToken(null);
+        userDAO.save(user);
+        return AuthenticationResponse
+                .builder().build();
+    }
+
+//    public AuthenticationResponse logout(String token) {
+//
+//
+//    }
 }

@@ -1,5 +1,4 @@
-package entity;
-
+package com.example.project.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AuthenticationRequest {
+public class RegisterRequest {
 
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
 

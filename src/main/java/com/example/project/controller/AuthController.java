@@ -1,17 +1,14 @@
-package controller;
+package com.example.project.controller;
 
 
-import entity.AuthenticationRequest;
-import entity.AuthenticationResponse;
-import entity.RegisterRequest;
+import com.example.project.entity.AuthenticationRequest;
+import com.example.project.entity.AuthenticationResponse;
+import com.example.project.entity.RegisterRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import service.AuthenticationService;
+import org.springframework.web.bind.annotation.*;
+import com.example.project.service.AuthenticationService;
 
 @RestController
 @AllArgsConstructor
@@ -29,5 +26,11 @@ public class AuthController {
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate (@RequestBody AuthenticationRequest authenticationRequest){
         return ResponseEntity.ok(authenticationService.authenticate(authenticationRequest));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token, HttpServletResponse response) {
+        authenticationService.logout(token);
+        return ResponseEntity.ok("Logged out successfully");
     }
 }

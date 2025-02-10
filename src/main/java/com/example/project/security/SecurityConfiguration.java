@@ -1,7 +1,8 @@
-package security;
+package com.example.project.security;
 
 
-import filters.JwtAuthFilter;
+import com.example.project.filters.JwtAuthFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(matcherRegistry ->
                         matcherRegistry
-                                .requestMatchers("/api/v1/auth/**")
+                                .requestMatchers("/api/auth/**")
                                 .permitAll()
                                 .anyRequest().authenticated()
                 )

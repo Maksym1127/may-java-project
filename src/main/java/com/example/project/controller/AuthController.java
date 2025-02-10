@@ -12,7 +12,7 @@ import com.example.project.service.AuthenticationService;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private AuthenticationService authenticationService;

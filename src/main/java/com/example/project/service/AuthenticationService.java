@@ -71,8 +71,4 @@ public class AuthenticationService {
                 .builder().build();
     }
 
-//    public AuthenticationResponse logout(String token) {
-//
-//
-//    }
 }

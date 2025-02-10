@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: Spring Boot Java Project
+  profile:
+    active: users
+  datasource:
+    url: "jdbc:mysql://localhost:3306/jan_2024?createDatabaseIfNotExist=true"
+    username: "root"
+    password: "Maksym674"
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update

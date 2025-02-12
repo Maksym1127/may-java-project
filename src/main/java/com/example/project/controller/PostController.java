@@ -19,6 +19,7 @@ public class PostController {
 
     private final PostService postService;
     private final JwtService jwtService;
+
     // 1. Перегляд постів користувача (неавторизований доступ)
     @GetMapping("/{email}")
     public ResponseEntity<List<PostDto>> getPosts(@PathVariable String email) {
@@ -27,24 +28,24 @@ public class PostController {
     }
 
     // 2. Створення посту для користувача (може тільки власник)
-    // /api/users/posts?email=test@gmail.com
     @PostMapping
     public ResponseEntity<Post> createPost(
-            @RequestHeader("Authorization") String token, // Токен авторизації
-            @RequestBody PostRequest postRequest) {  // Запит з даними для створення поста
-        String email = postRequest.getEmail();  // email вже передається в тілі запиту
-        String text = postRequest.getText();
-        Post createdPost = postService.createPost(token, email, text);
-        return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+            @RequestBody PostRequest postRequest,
+            @RequestHeader("Authorization") String token) {
+        String userEmail = jwtService.extractUsername(token.substring(7)); // Видаляємо "Bearer "
+        if (!userEmail.equals(postRequest.getUserEmail())) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        Post post = postService.createPost(postRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
-
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<Void> deletePost(
             @PathVariable Long postId,
             @RequestHeader("Authorization") String token) {  // Отримуємо токен з заголовка
-        String email = jwtService.extractUsername(token); // Витягнути email з токена
-        postService.deletePost(postId, email); // Використовуємо email з токена
+        String userEmail = jwtService.extractUsername(token.substring(7)); // Видаляємо "Bearer "
+        postService.deletePost(postId, userEmail); // Використовуємо email з токена
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

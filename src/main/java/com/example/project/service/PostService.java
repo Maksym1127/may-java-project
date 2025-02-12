@@ -1,4 +1,5 @@
 package com.example.project.service;
+import com.example.project.entity.requests.PostRequest;
 
 import com.example.project.dao.PostRepository;
 import com.example.project.dao.UserDAO;
@@ -7,6 +8,7 @@ import com.example.project.entity.Post;
 import com.example.project.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -35,27 +37,17 @@ public class PostService {
     }
 
     // Створення посту для користувача
-    public Post createPost(String token, String email, String text) {
-        // Перевіряємо email з токеном користувача
-        System.out.println("Token: " + token);
-        String authenticatedEmail = jwtService.extractUsername(token);  // Отримуємо email із токена
-        if (!authenticatedEmail.equals(email)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only create posts for your own account.");
-        }
-        // Знаходимо користувача по email
-        User user = userDAO.findUserByEmail(email).orElseThrow(() ->
-                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found")
-        );
+    public Post createPost(PostRequest postRequest) {
+        User user = userDAO.findUserByEmail(postRequest.getUserEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Створюємо новий пост
         Post post = Post.builder()
-                .user(user)  // Прив'язуємо пост до користувача
-                .text(text)
+                .text(postRequest.getText())
+                .user(user)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .build();
 
-        // Зберігаємо пост у базі даних
         return postRepository.save(post);
     }
 

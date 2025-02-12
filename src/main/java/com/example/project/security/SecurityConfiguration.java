@@ -31,7 +31,11 @@ public class SecurityConfiguration {
                         matcherRegistry
                                 .requestMatchers("/api/auth/**")
                                 .permitAll()
-                                .anyRequest().hasRole("AUTHORIZED")
+                                .requestMatchers("/api/users/posts/{email}")
+                                .permitAll()
+                                .requestMatchers("/api/users/**")
+                                .authenticated()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

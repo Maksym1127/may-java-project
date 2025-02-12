@@ -5,6 +5,7 @@ import com.example.project.entity.requests.AuthenticationRequest;
 import com.example.project.entity.requests.AuthenticationResponse;
 import com.example.project.entity.requests.RegisterRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class AuthController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register (@RequestBody RegisterRequest registerRequest){
+    public ResponseEntity<AuthenticationResponse> register (@Valid @RequestBody RegisterRequest registerRequest){
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 

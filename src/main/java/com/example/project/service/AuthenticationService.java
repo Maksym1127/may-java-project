@@ -1,13 +1,19 @@
 package com.example.project.service;
 
 import com.example.project.dao.UserDAO;
+import com.example.project.dto.UserDto;
 import com.example.project.entity.*;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Service
 @AllArgsConstructor
@@ -20,6 +26,9 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
 
+        if (userDAO.findUserByEmail(registerRequest.getEmail()).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with this email already exists.");
+        }
         User user = User
                 .builder()
                 .firstName(registerRequest.getFirstName())
@@ -34,7 +43,6 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
-
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
@@ -47,6 +55,7 @@ public class AuthenticationService {
                 .orElseThrow();
         String token = jwtService.generateToken(user);
         user.setToken(token);
+        user.setLastLogin(LocalDateTime.now());
         userDAO.save(user);
 
         return AuthenticationResponse
@@ -55,19 +64,18 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse logout (String token) {
+    public void logout (String token) {
         if (token == null || !token.startsWith("Bearer ")) {
             throw new RuntimeException("Invalid token");
         }
-
         String jwt = token.substring(7);
-
         User user = userDAO.findByToken(jwt)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        user.setLastLogout(LocalDateTime.now());
         user.setToken(null);
         userDAO.save(user);
-        return AuthenticationResponse
+        AuthenticationResponse
                 .builder().build();
     }
 

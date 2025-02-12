@@ -31,7 +31,7 @@ public class SecurityConfiguration {
                         matcherRegistry
                                 .requestMatchers("/api/auth/**")
                                 .permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().hasRole("AUTHORIZED")
                 )
                 .sessionManagement(httpSecuritySessionManagementConfigurer -> httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)

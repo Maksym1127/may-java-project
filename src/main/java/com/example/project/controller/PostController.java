@@ -54,8 +54,8 @@ public class PostController {
             @PathVariable Long postId,
             @RequestHeader("Authorization") String token,
             @RequestBody String newText) {
-        String email = jwtService.extractUsername(token); // Витягнути email з токена
-        PostDto updatedPost = postService.updatePost(postId, email, newText);
+        String userEmail = jwtService.extractUsername(token.substring(7));// Витягнути email з токена
+        PostDto updatedPost = postService.updatePost(postId, userEmail, newText);
         return new ResponseEntity<>(updatedPost, HttpStatus.OK);
     }
 }

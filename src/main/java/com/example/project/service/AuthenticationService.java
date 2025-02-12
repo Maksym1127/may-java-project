@@ -1,8 +1,10 @@
 package com.example.project.service;
 
 import com.example.project.dao.UserDAO;
-import com.example.project.dto.UserDto;
 import com.example.project.entity.*;
+import com.example.project.entity.requests.AuthenticationRequest;
+import com.example.project.entity.requests.AuthenticationResponse;
+import com.example.project.entity.requests.RegisterRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 @Service
 @AllArgsConstructor

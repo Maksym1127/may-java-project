@@ -34,3 +34,80 @@ databaseChangeLog:
               - column:
                   name: "last_logout"
                   type: "date"
+
+
+databaseChangeLog:
+  # Таблиця користувачів (вже є)
+  - changeSet:
+      id: "1.0.1"
+      author: "maksym1127"
+      changes:
+        - createTable:
+            tableName: "users"
+            columns:
+              - column:
+                  name: "id"
+                  type: "bigint"
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "first_name"
+                  type: "text"
+              - column:
+                  name: "last_name"
+                  type: "text"
+              - column:
+                  name: "email"
+                  type: "text"
+              - column:
+                  name: "password"
+                  type: "text"
+              - column:
+                  name: "token"
+                  type: "text"
+              - column:
+                  name: "last_login"
+                  type: "date"
+              - column:
+                  name: "last_logout"
+                  type: "date"
+
+  - changeSet:
+      id: "1.0.2"
+      author: "maksym1127"
+      changes:
+        - createTable:
+            tableName: "posts"
+            columns:
+              - column:
+                  name: "id"
+                  type: "bigint"
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: "user_id"
+                  type: "bigint"
+                  constraints:
+                    nullable: false
+                    foreignKeyName: "fk_posts_users"
+                    references: "users(id)"
+              - column:
+                  name: "text"
+                  type: "text"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "created_at"
+                  type: "timestamp"
+                  constraints:
+                    nullable: false
+              - column:
+                  name: "updated_at"
+                  type: "timestamp"
+                  constraints:
+                    nullable: true
+
